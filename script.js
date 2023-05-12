@@ -1,10 +1,9 @@
 const START_KEY = 'Space';
-const COUNT_BTNS = 4;
 
 const levelTitleEl = document.querySelector('.level-title');
 
-const btns = document.querySelectorAll('.btn');
-const btnsContainer = document.querySelector('.container');
+const buttons = document.querySelectorAll('.btn');
+const buttonsContainer = document.querySelector('.container');
 
 const countUserMovesEl = document.querySelector('.user-count-move');
 const countMovesEl = document.querySelector('.count-moves');
@@ -16,10 +15,22 @@ let isPlayerOrder = false;
 let gameQueue = [];
 let userQueue = [];
 
+document.addEventListener('keydown', (e) => {
+  if(e.code === START_KEY && !gameIsStarted) start();
+})
+buttonsContainer.addEventListener('click', function(e) {
+  if(!isPlayerOrder) return;
+
+  const btn = e.target;
+  if(!btn.classList.contains('btn')) return;
+
+  checkUserChoice(btn);
+})
+
 function reset() {
   levelTitleEl.textContent = 'Press SPACE to Start';
-  countMovesEl.textContent = 0;
-  countUserMovesEl.textContent = 0;
+  countMovesEl.textContent = '0';
+  countUserMovesEl.textContent = '0';
   currentLevel = 0;
   gameQueue = [];
   userQueue = [];
@@ -41,9 +52,9 @@ function nextLevel() {
    levelTitleEl.textContent = 'Level '+ ++currentLevel;
 
    countMovesEl.textContent = currentLevel;
-   countUserMovesEl.textContent = userQueue.length;
+   countUserMovesEl.textContent = String(userQueue.length);
 
-   const randBtn = btns[Math.floor(Math.random() * COUNT_BTNS)];
+   const randBtn = buttons[Math.floor(Math.random() * buttons.length)];
    gameQueue.push(randBtn);
 
    playButton(randBtn);
@@ -57,18 +68,16 @@ function loose() {
   levelTitleEl.textContent = 'Loose!!!';
 
   setTimeout(() => {
-
     levelTitleEl.textContent = 'Press key to Start';
     document.body.classList.remove('game-over');
 
     reset();
-
   }, 1000);
 }
 
 function playButton(btn) {
   const audio = new Audio(btn.dataset.sound);
-  audio.play().then(res => {
+  audio.play().then(() => {
     if(!isPlayerOrder) isPlayerOrder = true;
     btn.classList.add('pressed');
     setTimeout(() => {
@@ -78,14 +87,12 @@ function playButton(btn) {
 }
 
 function checkUserChoice(btn) {
-
   userQueue.push(btn);
-
   const currentMoveNum = userQueue.length - 1;
 
   if(userQueue[currentMoveNum] === gameQueue[currentMoveNum]) {
     playButton(btn);
-    countUserMovesEl.textContent = userQueue.length;
+    countUserMovesEl.textContent = String(userQueue.length);
 
     if(userQueue.length === gameQueue.length) {
       setTimeout(() => {
@@ -97,16 +104,4 @@ function checkUserChoice(btn) {
   }
 }
 
-btnsContainer.addEventListener('click', function(e) {
-  if(!isPlayerOrder) {
-    return;
-  }
-
-  const btn = e.target;
-  if(!btn.classList.contains('btn')) return;
-
-  checkUserChoice(btn);
-})
-document.addEventListener('keydown', (e) => {
-  if(e.code === START_KEY && !gameIsStarted) start();
-})
+reset()
