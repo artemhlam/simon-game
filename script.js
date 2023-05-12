@@ -13,8 +13,8 @@ let gameIsStarted = false;
 let currentLevel = 0;
 let isPlayerOrder = false;
 
-let gameQueue = [];
-let userQueue = [];
+let gameMoves = [];
+let userMoves = [];
 
 document.addEventListener('keydown', (e) => {
   if(e.code === START_KEY && !gameIsStarted) start();
@@ -53,14 +53,14 @@ function start() {
 function nextLevel() {
    isPlayerOrder = false;
 
-   userQueue = [];
+   userMoves = [];
    levelTitleEl.textContent = 'Level '+ ++currentLevel;
 
    countMovesEl.textContent = currentLevel;
    countUserMovesEl.textContent = String(userQueue.length);
 
    const randBtn = buttons[Math.floor(Math.random() * buttons.length)];
-   gameQueue.push(randBtn);
+   gameMoves.push(randBtn);
 
    playButton(randBtn);
    isPlayerOrder = true;
@@ -92,14 +92,14 @@ function playButton(btn) {
 }
 
 function checkUserChoice(btn) {
-  userQueue.push(btn);
+  userMoves.push(btn);
   const currentMoveNum = userQueue.length - 1;
 
-  if(userQueue[currentMoveNum] === gameQueue[currentMoveNum]) {
+  if(userMoves[currentMoveNum] === gameMoves[currentMoveNum]) {
     playButton(btn);
-    countUserMovesEl.textContent = String(userQueue.length);
+    countUserMovesEl.textContent = String(userMoves.length);
 
-    if(userQueue.length === gameQueue.length) {
+    if(userMoves.length === gameMoves.length) {
       setTimeout(() => {
         nextLevel();
       }, 500)
