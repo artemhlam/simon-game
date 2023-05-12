@@ -7,6 +7,7 @@ const buttonsContainer = document.querySelector('.container');
 
 const countUserMovesEl = document.querySelector('.user-count-move');
 const countMovesEl = document.querySelector('.count-moves');
+const progressEl = document.querySelector('.progress-block');
 
 let gameIsStarted = false;
 let currentLevel = 0;
@@ -29,8 +30,11 @@ buttonsContainer.addEventListener('click', function(e) {
 
 function reset() {
   levelTitleEl.textContent = 'Press SPACE to Start';
+
   countMovesEl.textContent = '0';
   countUserMovesEl.textContent = '0';
+  progressEl.style.display = 'none';
+
   currentLevel = 0;
   gameQueue = [];
   userQueue = [];
@@ -38,6 +42,7 @@ function reset() {
 }
 
 function start() {
+  progressEl.style.display = 'block';
   gameIsStarted = true;
   levelTitleEl.textContent = 'START!!!'
   setTimeout(() => {
